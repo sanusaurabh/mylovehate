@@ -102,6 +102,11 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 				String decpkey = AES.decrypt(emailEntityvlidation.getLiceneExpirery(), secret);
 				return decpkey+"_"+macid;
 			}
+			else if(emailEntityvlidation.getMacId().equalsIgnoreCase(macid))
+			{
+				String decpkey = AES.decrypt(emailEntityvlidation.getLiceneExpirery(), secret);
+				return decpkey+"_"+macid;
+			}
 			else {
 				return "Invalid Key " + key;
 			}
