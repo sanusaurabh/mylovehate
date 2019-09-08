@@ -32,11 +32,9 @@ public class LicenceController {
 		 String secret = env.getProperty("aes.secretKey");
 		 String decpkey = AES.decrypt(key, secret);
 		 if(keyValue.contains(decpkey)) {
-			 if(listofCurrentuser.get(decpkey)==null)
-			 {
+			
 			 listofCurrentuser.put(decpkey, 1);
 			 return 1;
-			 }
 		 }
 		return 0;
 		
