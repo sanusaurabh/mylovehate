@@ -9,16 +9,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.licence.emaillicence.model.bean.EmailBean;
 import com.licence.emaillicence.util.AES;
 import com.licence.emaillicences.service.EmailLicenceService;
+import com.licence.emaillicences.service.LicenceKeyService;
 
 @RestController
 @RequestMapping("/licence")
@@ -26,6 +25,8 @@ public class LicenceController {
 	
 	@Autowired
 	private EmailLicenceService emailLicenceService;
+	
+	
 	
 	
 	
@@ -74,6 +75,28 @@ public class LicenceController {
 		
 	}
 	
+	
+	
+	@RequestMapping(value="/emailextractoractivateion",method= RequestMethod.POST)
+	public String getEmailextractorActivateionAccount(HttpServletRequest handlerServlet) 
+	{
+		 String key =handlerServlet.getParameter("key");
+		 String licenceKey =emailLicenceService.emailExtractoractivation(key,"Email Extractor Tool");
+		 return licenceKey;
+		
+	}
+	
+	
+	@RequestMapping(value="/emailextractorexportstatuscheck",method= RequestMethod.POST)
+	public String getEmailextractorExportStatusCheck(HttpServletRequest handlerServlet) 
+	{
+		 String key =handlerServlet.getParameter("key");
+		 String licenceKey =emailLicenceService.emailextractorExportStatusCheck(key,"Email Extractor Tool");
+		 return licenceKey;
+		
+	}
+	
+	
 	@RequestMapping("/helo")
 	public String hello(@RequestParam("key") String key) 
 	{
@@ -81,15 +104,6 @@ public class LicenceController {
 		return "hello";
 	}
 	
-	@RequestMapping(value="/activation",method= RequestMethod.POST)
-	public String getActivationAccount(HttpServletRequest handlerServlet) 
-	{
-		 String key =handlerServlet.getParameter("key");
-		 emailLicenceService.activation(key);
-		 
-		return key;
-		
-	}
 	
 	@RequestMapping(value = "/allactivationkey",method = RequestMethod.GET,produces = "application/json")
 	public  List<EmailBean> getAllActivation() {
@@ -97,5 +111,65 @@ public class LicenceController {
 		return list;
 	
 	
+	}
+	
+	@RequestMapping(value="/emailvalidationlicenceactivate",method= RequestMethod.POST)
+	public String getActiveEmailvalidatorLicenceaAccount(HttpServletRequest handlerServlet) 
+	{
+		//0VRC-RJRB-GEXT-ARNQ
+		 String key =handlerServlet.getParameter("key");
+		 String value = emailLicenceService.emailvalidatorLicenceaAccount(key,"Email Validation Tool");
+		 return value;
+		
+	}
+	
+	@RequestMapping(value="/emailvalidationtstatuscheck",method= RequestMethod.POST)
+	public String getActiveEmailvalidatorStatusCheck(HttpServletRequest handlerServlet) 
+	{
+		//0VRC-RJRB-GEXT-ARNQ
+		 String key =handlerServlet.getParameter("key");
+		 String value = emailLicenceService.emailvalidatorStatusCheck(key);
+		 return value;
+		
+	}
+	
+	@RequestMapping(value="/resetlicenceactivate",method= RequestMethod.POST)
+	public String getresetlicenceactivateAccount(HttpServletRequest handlerServlet) 
+	{
+		//0VRC-RJRB-GEXT-ARNQ
+		 String key =handlerServlet.getParameter("key");
+		 String value = emailLicenceService.resetlicenceactivateAccount(key);
+		 return value;
+		
+	}
+	
+	@RequestMapping(value="/resetlock",method= RequestMethod.POST)
+	public String getresetlock(HttpServletRequest handlerServlet) 
+	{
+		//0VRC-RJRB-GEXT-ARNQ
+		 String key =handlerServlet.getParameter("key");
+		 String value = emailLicenceService.getresetlock(key);
+		 return value;
+		
+	}
+	
+	@RequestMapping(value="/setlock",method= RequestMethod.POST)
+	public String getsetlock(HttpServletRequest handlerServlet) 
+	{
+		//0VRC-RJRB-GEXT-ARNQ
+		 String key =handlerServlet.getParameter("key");
+		 String value = emailLicenceService.getsetlock(key);
+		 return value;
+		
+	}//lockstatus
+	
+	@RequestMapping(value="/lockstatus",method= RequestMethod.POST)
+	public String getlockstatus(HttpServletRequest handlerServlet) 
+	{
+		//0VRC-RJRB-GEXT-ARNQ
+		 String key =handlerServlet.getParameter("key");
+		 String value = emailLicenceService.getlockstatus(key);
+		 return value;
+		
 	}
 }

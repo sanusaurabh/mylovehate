@@ -6,11 +6,23 @@ import com.licence.emaillicence.model.bean.EmailBean;
 
 public interface EmailLicenceService {
 	
-	public abstract void activation(String key);
+	public abstract String emailExtractoractivation(String key, String toolName);
 	
 	public abstract List<EmailBean>  getAllActivation();
 	
-	public  abstract void encription(String key);
+	public abstract String emailvalidatorLicenceaAccount(String key, String toolName);
+
+	public abstract String resetlicenceactivateAccount(String key);
+
+	public abstract String getresetlock(String key);
+
+	public abstract String getsetlock(String key);
+
+	public abstract String emailvalidatorStatusCheck(String key);
+
+	public abstract String getlockstatus(String key);
+
+	public abstract String emailextractorExportStatusCheck(String key, String string);
 	
 
 }

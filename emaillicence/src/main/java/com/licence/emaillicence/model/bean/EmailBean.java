@@ -13,6 +13,7 @@ public class EmailBean {
 	private long id;
     @Column(name="product_key")
 	private String key;
+   
     @Column(name="Start_date")
 	private Date startdate;
     @Column(name="End_date")
@@ -24,7 +25,7 @@ public class EmailBean {
 
 	public EmailBean(long id, String key, Date startdate, Date lastdate) {
 		super();
-		this.id = id;
+		this.id = id; 
 		this.key = key;
 		this.startdate = startdate;
 		this.enddate = lastdate;

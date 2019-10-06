@@ -5,11 +5,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.licence.emaillicence.model.EmailEntity;
+import com.licence.emaillicence.model.LicenceLock;
 
-public interface EmailLicenceRepository extends JpaRepository<EmailEntity, Long> {
-	@Query("FROM EmailEntity e WHERE e.key = :key")
-	EmailEntity findByKey(@Param("key")String key);
-	
-	 
+public interface LicenceLockRepository extends JpaRepository<LicenceLock, Long> {
+	@Query("FROM LicenceLock e WHERE e.key = :key")
+	LicenceLock findByKey(@Param("key")String key);
 
 }

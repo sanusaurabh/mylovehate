@@ -17,34 +17,41 @@ public class EmailEntity {
 	private long id;
     @Column(name="product_key")
 	private String key;
+    @Column(name="product_name")
+   	private String productName;
     @Column(name="Start_date")
 	private Date startdate;
     @Column(name="End_date")
 	private Date enddate;
-    
     @Column(name="licene_expirery")
 	private String liceneExpirery;
+    @Column(name="mac_id")
+	private String macId;
 
 	public EmailEntity() {
 		super();
 	}
 
-	public EmailEntity(long id, String key, Date startdate, Date lastdate,String liceneExpirery) {
+	public EmailEntity(long id, String key, String productName,Date startdate, Date lastdate,String liceneExpirery,String macId) {
 		super();
 		this.id = id;
 		this.key = key;
+		this.productName =productName;
 		this.startdate = startdate;
 		this.enddate = lastdate;
 		this.liceneExpirery= liceneExpirery;
+		this.macId= macId;
 		
 	}
 	
-	public EmailEntity( String key, Date startdate, Date lastdate,String liceneExpirery) {
+	public EmailEntity( String key, String productName,Date startdate, Date lastdate,String liceneExpirery,String macId) {
 		 
 		this.key = key;
+		this.productName =productName;
 		this.startdate = startdate;
 		this.enddate = lastdate;
 		this.liceneExpirery= liceneExpirery;
+		this.macId= macId;
 	}
 
 	public long getId() {
@@ -84,6 +91,14 @@ public class EmailEntity {
 	
 	public void setLiceneExpirery(String liceneExpirery){
 		this.liceneExpirery=liceneExpirery;
+	}
+
+	public String getMacId() {
+		return macId;
+	}
+
+	public void setMacId(String macId) {
+		this.macId = macId;
 	}
 	
 
