@@ -133,10 +133,34 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 		EmailEntity emailEntity =emailLicenceDao.findByKey(keys[0]);
 		if(keys[0].equalsIgnoreCase(emailEntity.getKey()) && keys[3].equalsIgnoreCase(emailEntity.getMacId()))
 		{
+			if(!vlidateExperyDate(emailEntity)) 
+			{
+				return "Key Expired";
+			}
 			return "success";
 		}
 		
 		return "fail";
+	}
+
+	private boolean vlidateExperyDate(EmailEntity emailEntity) {
+		LocalDate startDate = emailEntity.getStartdate().toLocalDate();
+		LocalDate endDate = emailEntity.getLastdate().toLocalDate();
+		
+		Period fixedintervalPeriod = Period.between(startDate, endDate);
+		
+		int fixeddays = fixedintervalPeriod.getDays();
+		
+		Period usedintervalPeriod = Period.between(startDate, LocalDate.now());
+		int usedddays = usedintervalPeriod.getDays();
+		
+		if(usedddays<fixeddays) 
+		{
+			return false;
+		}
+		 
+		return true;  
+		
 	}
 
 	@Override
@@ -235,6 +259,10 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 		String lockValue = "0";
 
 		if (emailEntityvlidation != null && emailEntityvlidation.getKey().equalsIgnoreCase(key.split("_")[0])) {
+			if(!vlidateExperyDate(emailEntityvlidation)) 
+			{
+				return "Key Expired";
+			}
 			String secret = env.getProperty("aes.secretKey");
 			String decpkey = AES.decrypt(emailEntityvlidation.getLiceneExpirery(), secret);
 			if (!decpkey.equalsIgnoreCase(key)) {
