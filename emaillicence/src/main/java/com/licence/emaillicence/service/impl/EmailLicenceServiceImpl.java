@@ -3,6 +3,7 @@ package com.licence.emaillicence.service.impl;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,19 +147,14 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 	private boolean vlidateExperyDate(EmailEntity emailEntity) {
 		LocalDate startDate = emailEntity.getStartdate().toLocalDate();
 		LocalDate endDate = emailEntity.getLastdate().toLocalDate();
+		long fixeddays = ChronoUnit.DAYS.between(startDate, endDate);
 		
-		Period fixedintervalPeriod = Period.between(startDate, endDate);
-		
-		int fixeddays = fixedintervalPeriod.getDays();
-		
-		Period usedintervalPeriod = Period.between(startDate, LocalDate.now());
-		int usedddays = usedintervalPeriod.getDays();
-		
-		if(usedddays<fixeddays) 
+		long usedddays = ChronoUnit.DAYS.between(startDate, LocalDate.now());
+		 
+		if(usedddays>fixeddays) 
 		{
 			return false;
 		}
-		 
 		return true;  
 		
 	}
