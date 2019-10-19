@@ -281,6 +281,61 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 		return "";
 	}
 
+	@Override
+	public String emailSenderActivation(String key, String emailSendertoolName) {
+
+		LocalDate localDatestartdate = LocalDate.now();
+		Date startdate = Date.valueOf(localDatestartdate);
+		LocalDate localDatelastdate = null;
+		String[] keyarray = key.split("#");
+		key = keyarray[0];
+		String macid = keyarray[1];
+		String secret = env.getProperty("aes.secretKey");
+		String enkey_365_7 = env.getProperty("licence.product.key_365_7");
+		List<String> decpkey_365_7 = licenceKeyService.getOneYearLicencekeys(emailSendertoolName);//AES.decrypt(enkey_365_7, secret);
+		String enkey_30_6 = env.getProperty("licence.product.key_30_6");
+		List<String> decpkey_30_6 = licenceKeyService.getThirtyDayLicencekeys(emailSendertoolName);
+		String keyStartDateEndDate ="";
+		////#J20G4KL-B43XXAD-N2RSRE0-DSWAWXU
+		if (decpkey_365_7.contains(key)) {
+			localDatelastdate =localDatestartdate.plus(Period.ofDays(365));
+			Date lastdate = Date.valueOf(localDatelastdate);
+			keyStartDateEndDate = saveEmailExtractorActivation(key, emailSendertoolName, localDatestartdate,
+					startdate, localDatelastdate, lastdate, secret,macid);
+		}
+		
+		else if (decpkey_30_6.contains(key))
+		{
+			localDatelastdate =localDatestartdate.plus(Period.ofDays(30));
+			Date lastdate = Date.valueOf(localDatelastdate);
+			keyStartDateEndDate = saveEmailExtractorActivation(key, emailSendertoolName, localDatestartdate,
+					startdate, localDatelastdate, lastdate, secret,macid);
+		}
+		else
+		{
+			return "Invalid Key " + key;
+		}
+		 
+		return keyStartDateEndDate;
+	
+	}
+
+	@Override
+	public String emailsenderStatusCheck(String key, String string) {
+		String[] keys = key.split("_");
+		EmailEntity emailEntity =emailLicenceDao.findByKey(keys[0]);
+		if(keys[0].equalsIgnoreCase(emailEntity.getKey()) && keys[3].equalsIgnoreCase(emailEntity.getMacId()))
+		{
+			if(!vlidateExperyDate(emailEntity)) 
+			{
+				return "Key Expired";
+			}
+			return "success";
+		}
+		
+		return "fail";
+	}
+
 	
 
 }

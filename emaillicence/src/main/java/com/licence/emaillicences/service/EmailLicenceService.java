@@ -23,6 +23,10 @@ public interface EmailLicenceService {
 	public abstract String getlockstatus(String key);
 
 	public abstract String emailextractorExportStatusCheck(String key, String string);
+
+	public abstract String emailSenderActivation(String key, String string);
+
+	public abstract String emailsenderStatusCheck(String key, String toolName);
 	
 
 }

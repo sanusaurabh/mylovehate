@@ -172,4 +172,25 @@ public class LicenceController {
 		 return value;
 		
 	}
+	
+	
+	@RequestMapping(value="/emailsenderactivation",method= RequestMethod.POST)
+	public String getEmailsenderactivationAccount(HttpServletRequest handlerServlet) 
+	{
+		 String key =handlerServlet.getParameter("key");
+		 String licenceKey =emailLicenceService.emailSenderActivation(key,"Email Sender Tool");
+		 return licenceKey;
+		
+	}
+	
+	
+	@RequestMapping(value="/emailsenderstatuscheck",method= RequestMethod.POST)
+	public String getEmailsenderStatusCheck(HttpServletRequest handlerServlet) 
+	{
+		 String key =handlerServlet.getParameter("key");
+		 String licenceKey =emailLicenceService.emailsenderStatusCheck(key,"Email Sender Tool");
+		 return licenceKey;
+		
+	}
+	
 }
