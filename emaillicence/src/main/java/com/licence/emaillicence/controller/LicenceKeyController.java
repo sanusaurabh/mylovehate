@@ -30,7 +30,7 @@ public class LicenceKeyController {
 	
 	@RequestMapping(value = "/getthirtydaylicencekey",method = RequestMethod.POST,produces = "application/json")
 	public  List<LicenseKeyBean> getThirtyDayLicencekey(HttpServletRequest handlerServlet) {
-		String  toolName = "Email Extractor Tool,Email Validation Tool,Email Validation Tool";
+		String  toolName = "Email Extractor Tool,Email Validation Tool,Email Sender Tool";
 		 String productNmae = handlerServlet.getParameter("toolName");
 		 if(!toolName.contains(productNmae)) {
 			 return new ArrayList<LicenseKeyBean>();
@@ -40,7 +40,7 @@ public class LicenceKeyController {
 	}
 	@RequestMapping(value = "/getoneyearlicencekey",method = RequestMethod.POST,produces = "application/json")
 	public  List<LicenseKeyBean> getOneYearLicencekey(HttpServletRequest handlerServlet) {
-		String  toolName = "Email Extractor Tool,Email Validation Tool,Email Validation Tool";
+		String  toolName = "Email Extractor Tool,Email Validation Tool,Email Sender Tool";
 		 String productNmae = handlerServlet.getParameter("toolName");
 		 if(!toolName.contains(productNmae)) {
 			 return new ArrayList<LicenseKeyBean>();
@@ -52,7 +52,7 @@ public class LicenceKeyController {
 	@RequestMapping(value = "/createlicencekey",method = RequestMethod.POST,produces = "application/json")
 	public  LicenseKeyBean createLicencekey(HttpServletRequest handlerServlet) {
 		//http://localhost:9090/licencekey/createlicencekey?key=0S0Q6GT-IK125UH-1JJWL3H-5EQROJT&toolName=Email Extractor Tool&validForNoOfDay=365&isUsed=no
-		String  toolName = "Email Extractor Tool,Email Validation Tool,Email Validation Tool";
+		String  toolName = "Email Extractor Tool,Email Validation Tool,Email Sender Tool";
 		 String productNmae = handlerServlet.getParameter("toolName");
 		 
 		 if(!toolName.contains(productNmae)) 
