@@ -12,13 +12,15 @@ public interface LicenceKeyService {
 	List<LicenseKeyBean> getThirtyDayLicencekey(String productNmae);
 
 	List<LicenseKeyBean> getOneYearLicencekey(String productNmae);
+	List<LicenseKeyBean> getSevenDaysTrailLicencekey(String productNmae);
 
 	LicenseKeyBean createLicencekey(LicenseKeyBean licenseKeyBean);
 	
 	List<String> getOneYearLicencekeys(String productNmae);
 	List<String> getThirtyDayLicencekeys(String productNmae);
 	
-	 
+	List<String> getSevenDayTrailLicencekeys(String productNmae);
 	
+	 
 
 }

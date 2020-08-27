@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Util {
 	
 	
-	private static void test() {
+	public static void main(String[] args) {
 		 Scanner scanner = new Scanner(System.in);
 		 String key ="";
 		 int i,k,j=0,sub;

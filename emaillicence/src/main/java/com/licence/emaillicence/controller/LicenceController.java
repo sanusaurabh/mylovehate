@@ -193,4 +193,57 @@ public class LicenceController {
 		
 	}
 	
+	@RequestMapping(value="/semrushlicenceactivate",method= RequestMethod.POST)
+	public String getsemrushlicenceactivateAccount(HttpServletRequest handlerServlet) 
+	{
+		 String key =handlerServlet.getParameter("key");
+		 String licenceKey =emailLicenceService.semrushlicenceactivate(key,"SemRush Tool");
+		 return licenceKey;
+		
+	}
+	
+	
+	@RequestMapping(value="/semrushstatuscheck",method= RequestMethod.POST)
+	public String getsemrushstatusCheck(HttpServletRequest handlerServlet) 
+	{
+		 String key =handlerServlet.getParameter("key");
+		 String licenceKey =emailLicenceService.semrushstatusCheck(key,"SemRush Tool");
+		 return licenceKey;
+		
+	}
+	
+	@RequestMapping(value="/gsuitelicenceactivate",method= RequestMethod.POST)
+	public String getgsuitelicenceactivateAccount(HttpServletRequest handlerServlet) 
+	{
+		 String key =handlerServlet.getParameter("key");
+		 String licenceKey =emailLicenceService.gSuitelicenceactivate(key,"GSuite Tool");
+		 return licenceKey;
+		
+	}
+	
+	
+	@RequestMapping(value="/gsuitestatuscheck",method= RequestMethod.POST)
+	public String getGSuitetatusCheck(HttpServletRequest handlerServlet) 
+	{
+		 String key =handlerServlet.getParameter("key");
+		 String licenceKey =emailLicenceService.gSuitetatusCheck(key,"GSuite Tool");
+		 return licenceKey;
+		
+	}
+	
+	@RequestMapping(value="/noofallowed",method= RequestMethod.POST)
+	public String getnoofallowedCheck(HttpServletRequest handlerServlet) 
+	{
+		 String key =handlerServlet.getParameter("key");
+		 String noofallowed =emailLicenceService.getnoofallowedCheck(key);
+		 return noofallowed;
+		
+	}
+	
+	
+	
+	
+	
+	 
+	
 }

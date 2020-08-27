@@ -27,6 +27,16 @@ public interface EmailLicenceService {
 	public abstract String emailSenderActivation(String key, String string);
 
 	public abstract String emailsenderStatusCheck(String key, String toolName);
+
+	public abstract String semrushlicenceactivate(String key, String string);
+
+	public abstract String semrushstatusCheck(String key, String string);
+	
+	public abstract String gSuitelicenceactivate(String key, String string);
+
+	public abstract String gSuitetatusCheck(String key, String string);
+
+	public abstract String getnoofallowedCheck(String key);
 	
 
 }

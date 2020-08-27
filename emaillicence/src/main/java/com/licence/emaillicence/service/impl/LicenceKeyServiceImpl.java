@@ -49,6 +49,19 @@ public class LicenceKeyServiceImpl implements LicenceKeyService {
 		}
 		return licenseKeyBeanList;
 	}
+	
+	@Override
+	public List<LicenseKeyBean> getSevenDaysTrailLicencekey(String productNmae) {
+		List<LicenseKeyEntity> LicenseKeyEntityList = licenceKeyRepository.findAll();
+		List<LicenseKeyBean>  licenseKeyBeanList = new ArrayList<LicenseKeyBean>();
+		for(LicenseKeyEntity licenseKeyEntity : LicenseKeyEntityList)
+		{
+			if(licenseKeyEntity.getToolName().contentEquals(productNmae)&& licenseKeyEntity.getValidForNoOfDay().equalsIgnoreCase("7"))
+			licenseKeyBeanList.add(new LicenseKeyBean(licenseKeyEntity.getId(), licenseKeyEntity.getKey(), licenseKeyEntity.getToolName(), licenseKeyEntity.getValidForNoOfDay(), licenseKeyEntity.getIsUsed()));
+		}
+		return licenseKeyBeanList;
+	}
+
 
 	@Override
 	public LicenseKeyBean createLicencekey(LicenseKeyBean licenseKeyBean) {
@@ -81,4 +94,17 @@ public class LicenceKeyServiceImpl implements LicenceKeyService {
 		return licenseKeyBeanList;
 	}
 
+	@Override
+	public List<String> getSevenDayTrailLicencekeys(String productNmae) {
+		List<LicenseKeyEntity> LicenseKeyEntityList = licenceKeyRepository.findAll();
+		List<String>  licenseKeyBeanList = new ArrayList<String>();
+		for(LicenseKeyEntity licenseKeyEntity : LicenseKeyEntityList)
+		{
+			if(licenseKeyEntity.getToolName().contentEquals(productNmae)&& licenseKeyEntity.getValidForNoOfDay().equalsIgnoreCase("7"))
+			licenseKeyBeanList.add(licenseKeyEntity.getKey());
+		}
+		return licenseKeyBeanList;
+	}
+
+	
 }

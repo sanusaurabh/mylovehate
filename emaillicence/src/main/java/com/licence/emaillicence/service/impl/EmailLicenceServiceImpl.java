@@ -14,9 +14,11 @@ import org.springframework.stereotype.Service;
 import com.licence.emaillicence.dao.EmailLicenceRepository;
 import com.licence.emaillicence.dao.LicenceKeyRepository;
 import com.licence.emaillicence.dao.LicenceLockRepository;
+import com.licence.emaillicence.dao.NumberOfAllowedRepository;
 import com.licence.emaillicence.model.EmailEntity;
 import com.licence.emaillicence.model.LicenceLock;
 import com.licence.emaillicence.model.LicenseKeyEntity;
+import com.licence.emaillicence.model.NumberOfAllowed;
 import com.licence.emaillicence.model.bean.EmailBean;
 import com.licence.emaillicence.util.AES;
 import com.licence.emaillicences.service.EmailLicenceService;
@@ -35,6 +37,11 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 	
 	@Autowired
 	private LicenceKeyRepository licenceKeyRepository;
+	
+	@Autowired
+	private NumberOfAllowedRepository numberOfAllowedRepository;
+	
+	
 
 	@Autowired
 	private Environment env;
@@ -186,9 +193,16 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 			  lastdate = Date.valueOf(localDatelastdate);
 			keyStartDateEndDate = key + "_" + localDatestartdate.toString() + "_" + localDatelastdate.toString();
 		}
-		else if(decpkey_365.contains(key))
+		else if(decpkey_30.contains(key))
 		{
-			LocalDate localDatelastdate = localDatestartdate.plus(Period.ofDays(365));
+			LocalDate localDatelastdate = localDatestartdate.plus(Period.ofDays(30));
+			  lastdate = Date.valueOf(localDatelastdate);
+			keyStartDateEndDate = key + "_" + localDatestartdate.toString() + "_" + localDatelastdate.toString();
+		}
+		
+		else if(decpkey_30.contains(key))
+		{
+			LocalDate localDatelastdate = localDatestartdate.plus(Period.ofDays(7));
 			  lastdate = Date.valueOf(localDatelastdate);
 			keyStartDateEndDate = key + "_" + localDatestartdate.toString() + "_" + localDatelastdate.toString();
 		}
@@ -295,6 +309,7 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 		List<String> decpkey_365_7 = licenceKeyService.getOneYearLicencekeys(emailSendertoolName);//AES.decrypt(enkey_365_7, secret);
 		String enkey_30_6 = env.getProperty("licence.product.key_30_6");
 		List<String> decpkey_30_6 = licenceKeyService.getThirtyDayLicencekeys(emailSendertoolName);
+		List<String> decpTrailkey_7days_6 = licenceKeyService.getSevenDayTrailLicencekeys(emailSendertoolName);
 		String keyStartDateEndDate ="";
 		////#J20G4KL-B43XXAD-N2RSRE0-DSWAWXU
 		if (decpkey_365_7.contains(key)) {
@@ -311,6 +326,15 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 			keyStartDateEndDate = saveEmailExtractorActivation(key, emailSendertoolName, localDatestartdate,
 					startdate, localDatelastdate, lastdate, secret,macid);
 		}
+		
+		else if (decpTrailkey_7days_6.contains(key))
+		{
+			localDatelastdate =localDatestartdate.plus(Period.ofDays(7));
+			Date lastdate = Date.valueOf(localDatelastdate);
+			keyStartDateEndDate = saveEmailExtractorActivation(key, emailSendertoolName, localDatestartdate,
+					startdate, localDatelastdate, lastdate, secret,macid);
+		}
+		
 		else
 		{
 			return "Invalid Key " + key;
@@ -334,6 +358,140 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 		}
 		
 		return "fail";
+	}
+
+	@Override
+	public String semrushlicenceactivate(String key, String semRushToolName) {
+
+		LocalDate localDatestartdate = LocalDate.now();
+		Date startdate = Date.valueOf(localDatestartdate);
+		LocalDate localDatelastdate = null;
+		String[] keyarray = key.split("#");
+		key = keyarray[0];
+		String macid = keyarray[1];
+		String secret = env.getProperty("aes.secretKey");
+		String enkey_365_7 = env.getProperty("licence.product.key_365_7");
+		List<String> decpkey_365_7 = licenceKeyService.getOneYearLicencekeys(semRushToolName);//AES.decrypt(enkey_365_7, secret);
+		String enkey_30_6 = env.getProperty("licence.product.key_30_6");
+		List<String> decpkey_30_6 = licenceKeyService.getThirtyDayLicencekeys(semRushToolName);
+		
+		List<String> decpTrailkey_7days_6 = licenceKeyService.getSevenDayTrailLicencekeys(semRushToolName);
+		String keyStartDateEndDate ="";
+		////#J20G4KL-B43XXAD-N2RSRE0-DSWAWXU
+		if (decpkey_365_7.contains(key)) {
+			localDatelastdate =localDatestartdate.plus(Period.ofDays(365));
+			Date lastdate = Date.valueOf(localDatelastdate);
+			keyStartDateEndDate = saveEmailExtractorActivation(key, semRushToolName, localDatestartdate,
+					startdate, localDatelastdate, lastdate, secret,macid);
+		}
+		
+		else if (decpkey_30_6.contains(key))
+		{
+			localDatelastdate =localDatestartdate.plus(Period.ofDays(30));
+			Date lastdate = Date.valueOf(localDatelastdate);
+			keyStartDateEndDate = saveEmailExtractorActivation(key, semRushToolName, localDatestartdate,
+					startdate, localDatelastdate, lastdate, secret,macid);
+		}
+		else if (decpTrailkey_7days_6.contains(key))
+		{
+			localDatelastdate =localDatestartdate.plus(Period.ofDays(7));
+			Date lastdate = Date.valueOf(localDatelastdate);
+			keyStartDateEndDate = saveEmailExtractorActivation(key, semRushToolName, localDatestartdate,
+					startdate, localDatelastdate, lastdate, secret,macid);
+		}
+		else
+		{
+			return "Invalid Key " + key;
+		}
+		 
+		return keyStartDateEndDate;
+	}
+
+	@Override
+	public String semrushstatusCheck(String key, String string) {
+		String[] keys = key.split("_");
+		EmailEntity emailEntity =emailLicenceDao.findByKey(keys[0]);
+		if(keys[0].equalsIgnoreCase(emailEntity.getKey()) && keys[3].equalsIgnoreCase(emailEntity.getMacId()))
+		{
+			if(!vlidateExperyDate(emailEntity)) 
+			{
+				return "Key Expired";
+			}
+			return "success";
+		}
+		
+		return "fail";
+	}
+
+	@Override
+	public String gSuitelicenceactivate(String key, String gSuiteToolName) {
+		LocalDate localDatestartdate = LocalDate.now();
+		Date startdate = Date.valueOf(localDatestartdate);
+		LocalDate localDatelastdate = null;
+		String[] keyarray = key.split("#");
+		key = keyarray[0];
+		String macid = keyarray[1];
+		String secret = env.getProperty("aes.secretKey");
+		String enkey_365_7 = env.getProperty("licence.product.key_365_7");
+		List<String> decpkey_365_7 = licenceKeyService.getOneYearLicencekeys(gSuiteToolName);//AES.decrypt(enkey_365_7, secret);
+		String enkey_30_6 = env.getProperty("licence.product.key_30_6");
+		List<String> decpkey_30_6 = licenceKeyService.getThirtyDayLicencekeys(gSuiteToolName);
+		
+		List<String> decpTrailkey_7days_6 = licenceKeyService.getSevenDayTrailLicencekeys(gSuiteToolName);
+		String keyStartDateEndDate ="";
+		////#J20G4KL-B43XXAD-N2RSRE0-DSWAWXU
+		if (decpkey_365_7.contains(key)) {
+			localDatelastdate =localDatestartdate.plus(Period.ofDays(365));
+			Date lastdate = Date.valueOf(localDatelastdate);
+			keyStartDateEndDate = saveEmailExtractorActivation(key, gSuiteToolName, localDatestartdate,
+					startdate, localDatelastdate, lastdate, secret,macid);
+		}
+		
+		else if (decpkey_30_6.contains(key))
+		{
+			localDatelastdate =localDatestartdate.plus(Period.ofDays(30));
+			Date lastdate = Date.valueOf(localDatelastdate);
+			keyStartDateEndDate = saveEmailExtractorActivation(key, gSuiteToolName, localDatestartdate,
+					startdate, localDatelastdate, lastdate, secret,macid);
+		}
+		else if (decpTrailkey_7days_6.contains(key))
+		{
+			localDatelastdate =localDatestartdate.plus(Period.ofDays(7));
+			Date lastdate = Date.valueOf(localDatelastdate);
+			keyStartDateEndDate = saveEmailExtractorActivation(key, gSuiteToolName, localDatestartdate,
+					startdate, localDatelastdate, lastdate, secret,macid);
+		}
+		else
+		{
+			return "Invalid Key " + key;
+		}
+		 
+		return keyStartDateEndDate;
+	}
+
+	@Override
+	public String gSuitetatusCheck(String key, String string) {
+		String[] keys = key.split("_");
+		EmailEntity emailEntity =emailLicenceDao.findByKey(keys[0]);
+		if(keys[0].equalsIgnoreCase(emailEntity.getKey()) && keys[3].equalsIgnoreCase(emailEntity.getMacId()))
+		{
+			if(!vlidateExperyDate(emailEntity)) 
+			{
+				return "Key Expired";
+			}
+			return "success";
+		}
+		
+		return "fail";
+	}
+
+	 
+
+	@Override
+	public String getnoofallowedCheck(String key) {
+		String[] keys = key.split("_");
+		NumberOfAllowed numberOfAllowed =numberOfAllowedRepository.findByKey(keys[0]);
+		return ""+numberOfAllowed.getNoOfAllowed();
 	}
 
 	
