@@ -229,7 +229,7 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 		LicenseKeyEntity licenseKeyEntity = licenceKeyRepository.findByKey(key);
 		licenseKeyEntity.setIsUsed("yes");
 		licenceKeyRepository.saveAndFlush(licenseKeyEntity);
-		return keyStartDateEndDate;
+		return keyStartDateEndDate+"_"+macid;
 	}
 
 	@Override
