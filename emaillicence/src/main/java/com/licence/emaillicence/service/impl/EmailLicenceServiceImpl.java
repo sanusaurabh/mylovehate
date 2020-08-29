@@ -184,9 +184,13 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 		LocalDate localDatestartdate = LocalDate.now();
 		Date startdate = Date.valueOf(localDatestartdate);
 		Date lastdate=null;
+		String[] keyarray = key.split("#");
+		key = keyarray[0];
+		String macid = keyarray[1];
 		String keyStartDateEndDate = "";//key + "_" + localDatestartdate.toString() + "_" + localDatelastdate.toString();
 		List<String> decpkey_365 = licenceKeyService.getOneYearLicencekeys(emailValidationtoolName);//AES.decrypt(enkey_365_7, secret);
 		List<String> decpkey_30 = licenceKeyService.getThirtyDayLicencekeys(emailValidationtoolName);
+		List<String> decpTrailkey_7days_6 = licenceKeyService.getSevenDayTrailLicencekeys(emailValidationtoolName);
 		if(decpkey_365.contains(key)) 
 		{
 			LocalDate localDatelastdate = localDatestartdate.plus(Period.ofDays(365));
@@ -200,7 +204,7 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 			keyStartDateEndDate = key + "_" + localDatestartdate.toString() + "_" + localDatelastdate.toString();
 		}
 		
-		else if(decpkey_30.contains(key))
+		else if(decpTrailkey_7days_6.contains(key))
 		{
 			LocalDate localDatelastdate = localDatestartdate.plus(Period.ofDays(7));
 			  lastdate = Date.valueOf(localDatelastdate);
@@ -219,7 +223,7 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 		String secret = env.getProperty("aes.secretKey");
 		String decpkey = AES.encrypt(keyStartDateEndDate, secret);
 
-		EmailEntity emailEntity = new EmailEntity(key, emailValidationtoolName, startdate, lastdate, decpkey,"");
+		EmailEntity emailEntity = new EmailEntity(key, emailValidationtoolName, startdate, lastdate, decpkey,macid);
 
 		emailLicenceDao.save(emailEntity);
 		LicenseKeyEntity licenseKeyEntity = licenceKeyRepository.findByKey(key);
