@@ -218,7 +218,7 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 		}
 		EmailEntity emailEntityvlidation = emailLicenceDao.findByKey(key);
 		if (emailEntityvlidation != null && emailEntityvlidation.getKey().equalsIgnoreCase(key)) {
-			return "Invalid Key " + key;
+			return keyStartDateEndDate+"_"+macid;
 		}
 		String secret = env.getProperty("aes.secretKey");
 		String decpkey = AES.encrypt(keyStartDateEndDate, secret);
