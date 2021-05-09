@@ -38,5 +38,9 @@ public interface EmailLicenceService {
 
 	public abstract String getnoofallowedCheck(String key);
 	
+	public abstract String getpinterestlicenceactivateAccount(String key, String string);
+
+	public abstract String getpintereststatusCheck(String key, String string);
+	
 
 }

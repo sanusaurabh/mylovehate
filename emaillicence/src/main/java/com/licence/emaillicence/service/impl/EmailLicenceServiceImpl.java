@@ -41,8 +41,6 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 	@Autowired
 	private NumberOfAllowedRepository numberOfAllowedRepository;
 	
-	
-
 	@Autowired
 	private Environment env;
 
@@ -218,7 +216,7 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 		}
 		EmailEntity emailEntityvlidation = emailLicenceDao.findByKey(key);
 		if (emailEntityvlidation != null && emailEntityvlidation.getKey().equalsIgnoreCase(key)) {
-			return keyStartDateEndDate+"_"+macid;
+			return "Invalid Key " + key;
 		}
 		String secret = env.getProperty("aes.secretKey");
 		String decpkey = AES.encrypt(keyStartDateEndDate, secret);
@@ -496,6 +494,68 @@ public class EmailLicenceServiceImpl implements EmailLicenceService {
 		String[] keys = key.split("_");
 		NumberOfAllowed numberOfAllowed =numberOfAllowedRepository.findByKey(keys[0]);
 		return ""+numberOfAllowed.getNoOfAllowed();
+	}
+
+	@Override
+	public String getpinterestlicenceactivateAccount(String key, String pinterestToolName) {
+		LocalDate localDatestartdate = LocalDate.now();
+		Date startdate = Date.valueOf(localDatestartdate);
+		LocalDate localDatelastdate = null;
+		String[] keyarray = key.split("#");
+		key = keyarray[0];
+		String macid = keyarray[1];
+		String secret = env.getProperty("aes.secretKey");
+		String enkey_365_7 = env.getProperty("licence.product.key_365_7");
+		List<String> decpkey_365_7 = licenceKeyService.getOneYearLicencekeys(pinterestToolName);//AES.decrypt(enkey_365_7, secret);
+		String enkey_30_6 = env.getProperty("licence.product.key_30_6");
+		List<String> decpkey_30_6 = licenceKeyService.getThirtyDayLicencekeys(pinterestToolName);
+		
+		List<String> decpTrailkey_7days_6 = licenceKeyService.getSevenDayTrailLicencekeys(pinterestToolName);
+		String keyStartDateEndDate ="";
+		////#J20G4KL-B43XXAD-N2RSRE0-DSWAWXU
+		if (decpkey_365_7.contains(key)) {
+			localDatelastdate =localDatestartdate.plus(Period.ofDays(365));
+			Date lastdate = Date.valueOf(localDatelastdate);
+			keyStartDateEndDate = saveEmailExtractorActivation(key, pinterestToolName, localDatestartdate,
+					startdate, localDatelastdate, lastdate, secret,macid);
+		}
+		
+		else if (decpkey_30_6.contains(key))
+		{
+			localDatelastdate =localDatestartdate.plus(Period.ofDays(30));
+			Date lastdate = Date.valueOf(localDatelastdate);
+			keyStartDateEndDate = saveEmailExtractorActivation(key, pinterestToolName, localDatestartdate,
+					startdate, localDatelastdate, lastdate, secret,macid);
+		}
+		else if (decpTrailkey_7days_6.contains(key))
+		{
+			localDatelastdate =localDatestartdate.plus(Period.ofDays(7));
+			Date lastdate = Date.valueOf(localDatelastdate);
+			keyStartDateEndDate = saveEmailExtractorActivation(key, pinterestToolName, localDatestartdate,
+					startdate, localDatelastdate, lastdate, secret,macid);
+		}
+		else
+		{
+			return "Invalid Key " + key;
+		}
+		 
+		return keyStartDateEndDate;
+	}
+
+	@Override
+	public String getpintereststatusCheck(String key, String string) {
+		String[] keys = key.split("_");
+		EmailEntity emailEntity =emailLicenceDao.findByKey(keys[0]);
+		if(keys[0].equalsIgnoreCase(emailEntity.getKey()) && keys[3].equalsIgnoreCase(emailEntity.getMacId()))
+		{
+			if(!vlidateExperyDate(emailEntity)) 
+			{
+				return "Key Expired";
+			}
+			return "success";
+		}
+		
+		return "fail";
 	}
 
 	

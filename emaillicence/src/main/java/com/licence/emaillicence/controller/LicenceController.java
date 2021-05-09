@@ -240,7 +240,24 @@ public class LicenceController {
 		
 	}
 	
+	@RequestMapping(value="/pinterestlicenceactivate",method= RequestMethod.POST)
+	public String getpinterestlicenceactivateAccount(HttpServletRequest handlerServlet) 
+	{
+		 String key =handlerServlet.getParameter("key");
+		 String licenceKey =emailLicenceService.getpinterestlicenceactivateAccount(key,"Pinterest Tool");
+		 return licenceKey;
+		
+	}
 	
+	
+	@RequestMapping(value="/pintereststatuscheck",method= RequestMethod.POST)
+	public String getpintereststatusCheck(HttpServletRequest handlerServlet) 
+	{
+		 String key =handlerServlet.getParameter("key");
+		 String licenceKey =emailLicenceService.getpintereststatusCheck(key,"Pinterest Tool");
+		 return licenceKey;
+		
+	}
 	
 	
 	
